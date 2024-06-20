@@ -1,0 +1,23 @@
+- name : install packages.yml
+  host : all 
+  vars : 
+  pkgs :
+    - mariadb
+    - php
+- name : install packages 
+  yum : 
+    name : "{{ item }}"
+    state : present
+  loop : "{{ pkgs }}"
+  when : inventory_hostname in groups ['dev'] or 
+inventory_hostname in groups ['test'] or inventory_hostname in groups ['prod']
+
+- name : install RPM Developement tool 
+    state : present
+    when : inventory_hostname in group ['dev']
+
+- name : update all packages
+  yum : 
+    name : '*'
+    state : latest
+    when : inventory_hostname in group['dev']
